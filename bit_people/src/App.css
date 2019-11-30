@@ -40,3 +40,7 @@ main {
 #female {
   background-color: #ffebee;
 }
+
+#searchUsers {
+  width: 70%;
+}
