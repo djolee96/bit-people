@@ -14,7 +14,7 @@ const ListView = (props) => {
         <li class={"collection-item avatar " + clName}>
             <img src={props.user.photo.medium} alt="" class="circle" />
             <span className="name ">{props.user.fullName()}</span><br />
-            <span className="name "> <i className="material-icons">email</i> {props.user.hideEmail()} </span><br />
+            <span className="name"> <i className="material-icons">email</i> {props.user.hideEmail()} </span><br />
             <span className="name"><i className="material-icons">cake</i> {props.user.fullBirthday()} </span>
         </li>
     )
