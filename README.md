@@ -1,7 +1,7 @@
 # bit-people
 
 ## About Page
-<App>
+ <App>
     <Header></Header>
     <Main>
          <About></About>   
