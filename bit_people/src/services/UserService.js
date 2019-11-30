@@ -1,7 +1,7 @@
 import User from "../entities/User"
 
 let fetchUsers = () => {
-    const url = "https://randomuser.me/api/?results=5"
+    const url = "https://randomuser.me/api/?results=8"
     return (fetch(url)
         .then(response => response.json())
         .then(data => {
