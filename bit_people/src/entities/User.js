@@ -6,8 +6,15 @@ class User {
         this.photo = data.picture // object {large,medium,thumbnail}
         this.email = data.email // ""
         this.id = data.login.uuid //"    " id of user
-
     }
+
+    hideEmail() {
+        const [username, domain] = this.email.split("@")
+        const firstTwoLetters = username.slice(0, 2)
+        const lastTwoLetters = username.slice(username.length - 3, username.length - 1)
+        return `${firstTwoLetters}...${lastTwoLetters}@${domain}`
+    }
+
 }
 
 
