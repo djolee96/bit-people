@@ -29,3 +29,9 @@
 main {
   flex: 1 0 auto;
 }
+
+.myItem{
+  margin:10px auto;
+  width:70%;
+  text-align: left;
+}

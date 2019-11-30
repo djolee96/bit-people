@@ -14,7 +14,15 @@ class User {
         const lastTwoLetters = username.slice(username.length - 3, username.length - 1)
         return `${firstTwoLetters}...${lastTwoLetters}@${domain}`
     }
-
+    fullName() {
+        const firstName = this.name.first
+        const lastName = this.name.last
+        return `${firstName} ${lastName}`
+    }
+    fullBirthday() {
+        const birthday = new Date(this.birthday.date)
+        return `${(("0" + birthday.getDate()).slice(-2))}.${("0" + (birthday.getMonth() + 1)).slice(-2)}.${birthday.getFullYear()}`
+    }
 }
 
 

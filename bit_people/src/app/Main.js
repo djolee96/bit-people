@@ -1,9 +1,9 @@
 import React from "react"
-
+import UserPage from "./UserPage"
 const Main = () => {
     return (
         <main>
-            <p>Hello World</p>
+            <UserPage />
         </main>
     )
 }
