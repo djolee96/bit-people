@@ -2,10 +2,20 @@ import React from "react"
 
 
 const GridView = (props) => {
+    let clName = ''
+    if (props.user.gender === "female") {
+        clName = "red lighten-5"
+    }
+    else {
+        clName = ""
+    }
+
+
+
     return (
 
         <div class="col s4 m3">
-            <div class="card">
+            <div class={"card " + clName}>
                 <div class="card-image">
                     <img src={props.user.photo.large} alt="" />
                     <span class="card-title">{props.user.name.first}</span>
