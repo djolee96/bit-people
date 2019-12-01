@@ -5,6 +5,7 @@ import { fetchUsers } from "../services/UserService"
 import Buttons from "./Buttons"
 import Search from "./Search"
 import NoResult from "./NoResult"
+import GenderCounter from "./GenderCounter"
 
 class UserPage extends React.Component {
     constructor(props) {
@@ -61,7 +62,7 @@ class UserPage extends React.Component {
                 components = (<NoResult />)
             }
         }
-        else if (!this.state.isGrid) {
+        else {
             iconName = "view_module"
 
             if (searchUsers.length > 0) {
@@ -77,12 +78,13 @@ class UserPage extends React.Component {
             <div>
                 <Search query={this.state.query} inputText={this.inputText} />
                 <Buttons iconName={iconName} onRefresh={this.onRefresh} onChangeLayout={this.onChangeLayout} />
+                <GenderCounter user={searchUsers} />
                 <div>
                     <div class={nameForClass}>
                         {components}
                     </div>
                 </div>
-            </div>
+            </div >
         )
     }
 }
