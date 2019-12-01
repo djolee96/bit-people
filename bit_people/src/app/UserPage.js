@@ -85,12 +85,14 @@ class UserPage extends React.Component {
 
         return (
             <div>
-                <Search query={query} inputText={this.inputText} />
                 <Buttons iconName={iconName} onRefresh={this.onRefresh} onChangeLayout={this.onChangeLayout} />
-                <GenderCounter user={searchUsers} />
-                <div>
-                    {loading ? <Loader /> : <div class={nameForClass}>{components}</div>}
-                </div>
+                {loading ? <Loader /> : (
+                    <div>
+                        <Search query={query} inputText={this.inputText} />
+                        <GenderCounter user={searchUsers} />
+                        <div class={nameForClass}>{components}</div>
+                    </div>
+                )}
             </div >
         )
     }
