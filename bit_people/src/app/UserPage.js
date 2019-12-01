@@ -4,6 +4,8 @@ import GridView from "./GridView"
 import { fetchUsers } from "../services/UserService"
 import Buttons from "./Buttons"
 import Search from "./Search"
+import NoResult from "./NoResult"
+
 class UserPage extends React.Component {
     constructor(props) {
         super(props)
@@ -52,12 +54,23 @@ class UserPage extends React.Component {
         if (this.state.isGrid) {
             iconName = "list"
             nameForClass = "row"
-            components = searchUsers.map(user => <GridView user={user} />)
+            if (searchUsers.length > 0) {
+                components = searchUsers.map(user => <GridView user={user} />)
+            }
+            else {
+                components = (<NoResult />)
+            }
         }
-        else {
+        else if (!this.state.isGrid) {
             iconName = "view_module"
-            nameForClass = "collection myItem"
-            components = searchUsers.map(user => <ListView user={user} />)
+
+            if (searchUsers.length > 0) {
+                nameForClass = "collection myItem"
+                components = searchUsers.map(user => <ListView user={user} />)
+            }
+            else {
+                components = (<NoResult />)
+            }
         }
 
         return (
