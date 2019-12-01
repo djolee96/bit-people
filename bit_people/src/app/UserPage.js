@@ -4,6 +4,7 @@ import GridView from "./GridView"
 import { fetchUsers } from "../services/UserService"
 import Buttons from "./Buttons"
 import Search from "./Search"
+import Load from './Load';
 class UserPage extends React.Component {
     constructor(props) {
         super(props)
@@ -11,7 +12,8 @@ class UserPage extends React.Component {
         this.state = {
             users: [],
             isGrid: false,
-            query: ""
+            query: "",
+            load: true
         }
         this.onRefresh = this.onRefresh.bind(this)
         this.onChangeLayout = this.onChangeLayout.bind(this)
@@ -48,6 +50,7 @@ class UserPage extends React.Component {
         let iconName = ""
 
         const searchUsers = this.state.users.filter(user => user.name.first.toUpperCase().includes(this.state.query.toUpperCase()));
+
 
         if (this.state.isGrid) {
             iconName = "list"

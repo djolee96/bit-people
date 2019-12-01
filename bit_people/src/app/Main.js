@@ -1,6 +1,7 @@
 import React from "react"
 import UserPage from "./UserPage"
-const Main = () => {
+
+const Main = (props) => {
     return (
         <main>
             <UserPage />
