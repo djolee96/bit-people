@@ -7,6 +7,9 @@ import Search from "./Search"
 import NoResult from "./NoResult"
 import GenderCounter from "./GenderCounter"
 import Loader from './Loader';
+import TimeAgo from 'react-timeago';
+import { fullName } from '../shared/fullName';
+
 
 class UserPage extends React.Component {
     constructor(props) {
@@ -16,22 +19,31 @@ class UserPage extends React.Component {
             users: [],
             isGrid: false,
             query: "",
-            loading: false
+            loading: false,
+            refresh: ""
+
         }
         this.onRefresh = this.onRefresh.bind(this)
         this.onChangeLayout = this.onChangeLayout.bind(this)
         this.inputText = this.inputText.bind(this)
     }
     componentDidMount() {
-        this.setState({ loading: true }, () => {
-            fetchUsers()
-                .then((myUserList) => {
-                    this.setState({
-                        loading: false,
-                        users: myUserList
+
+        const last = JSON.parse(localStorage.getItem("lastView"))
+
+        last ?
+            this.setState({ users: JSON.parse(localStorage.getItem("user")) })
+            : (this.setState({ loading: true }, () => {
+                fetchUsers()
+                    .then((myUserList) => {
+                        this.setState({
+                            loading: false,
+                            users: myUserList,
+                        })
+                        localStorage.setItem("user", JSON.stringify(myUserList))
+                        localStorage.setItem("lastView", JSON.stringify(true))
                     })
-                })
-        })
+            }))
     }
 
     onRefresh() {
@@ -40,10 +52,14 @@ class UserPage extends React.Component {
                 .then((myUserList) => {
                     this.setState({
                         loading: false,
-                        users: myUserList
+                        users: myUserList,
+                        refresh: new Date()
                     })
+                    localStorage.setItem("user", JSON.stringify(myUserList))
+                    localStorage.setItem("time", JSON.stringify(this.state.refresh))
                 })
         })
+
     }
     onChangeLayout() {
         this.setState((prevState) => { return { isGrid: !prevState.isGrid } })
@@ -59,7 +75,8 @@ class UserPage extends React.Component {
         let nameForClass = ""
         let iconName = ""
 
-        const searchUsers = users.filter(user => user.fullName().includes(query));
+
+        const searchUsers = users.filter(user => fullName(user.name).includes(query));
 
         if (isGrid) {
             iconName = "list"
@@ -82,7 +99,6 @@ class UserPage extends React.Component {
                 components = (<NoResult />)
             }
         }
-
         return (
             <div>
                 <Buttons iconName={iconName} onRefresh={this.onRefresh} onChangeLayout={this.onChangeLayout} />
@@ -93,6 +109,7 @@ class UserPage extends React.Component {
                         <div class={nameForClass}>{components}</div>
                     </div>
                 )}
+                <p className="right">Last update: <TimeAgo date={localStorage.getItem("time")} /> </p>
             </div >
         )
     }

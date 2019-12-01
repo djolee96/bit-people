@@ -1,5 +1,7 @@
 import React from "react"
-
+import { hideEmail } from "../shared/hideEmail"
+import { fullName } from '../shared/fullName';
+import { fullBirthday } from "../shared/fullBirthday"
 
 const ListView = (props) => {
     let clName = ''
@@ -13,9 +15,9 @@ const ListView = (props) => {
     return (
         <li class={"collection-item avatar " + clName}>
             <img src={props.user.photo.medium} alt="" class="circle" />
-            <span className="name ">{props.user.fullName()}</span><br />
-            <span className="name"> <i className="material-icons">email</i> {props.user.hideEmail()} </span><br />
-            <span className="name"><i className="material-icons">cake</i> {props.user.fullBirthday()} </span>
+            <span className="name ">{fullName(props.user.name)}</span><br />
+            <span className="name"> <i className="material-icons">email</i> {hideEmail(props.user.email)} </span><br />
+            <span className="name"><i className="material-icons">cake</i> {fullBirthday(props.user.birthday)} </span>
         </li>
     )
 }

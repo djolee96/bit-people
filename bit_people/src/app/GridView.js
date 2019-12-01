@@ -1,5 +1,6 @@
 import React from "react"
-
+import { hideEmail } from "../shared/hideEmail"
+import { fullBirthday } from "../shared/fullBirthday"
 
 const GridView = (props) => {
     let clName = ''
@@ -18,8 +19,8 @@ const GridView = (props) => {
                     <span class="card-title">{props.user.name.first}</span>
                 </div>
                 <div class="card-content">
-                    <p><i className="material-icons">email</i> {props.user.hideEmail()} </p>
-                    <p><i className="material-icons">cake</i> {props.user.fullBirthday()}</p>
+                    <p><i className="material-icons">email</i> {hideEmail(props.user.email)} </p>
+                    <p><i className="material-icons">cake</i> {fullBirthday(props.user.birthday)}</p>
                 </div>
             </div>
         </div>
