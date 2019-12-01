@@ -47,7 +47,7 @@ class UserPage extends React.Component {
         let nameForClass = ""
         let iconName = ""
 
-        const searchUsers = this.state.users.filter(user => user.name.first.toUpperCase().includes(this.state.query.toUpperCase()));
+        const searchUsers = this.state.users.filter(user => user.fullName().includes(this.state.query));
 
         if (this.state.isGrid) {
             iconName = "list"
