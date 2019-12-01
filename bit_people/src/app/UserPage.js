@@ -6,6 +6,7 @@ import Buttons from "./Buttons"
 import Search from "./Search"
 import NoResult from "./NoResult"
 import GenderCounter from "./GenderCounter"
+import Loader from './Loader';
 
 class UserPage extends React.Component {
     constructor(props) {
@@ -14,28 +15,35 @@ class UserPage extends React.Component {
         this.state = {
             users: [],
             isGrid: false,
-            query: ""
+            query: "",
+            loading: false
         }
         this.onRefresh = this.onRefresh.bind(this)
         this.onChangeLayout = this.onChangeLayout.bind(this)
         this.inputText = this.inputText.bind(this)
     }
     componentDidMount() {
-        fetchUsers()
-            .then((myUserList) => {
-                this.setState({
-                    users: myUserList
+        this.setState({ loading: true }, () => {
+            fetchUsers()
+                .then((myUserList) => {
+                    this.setState({
+                        loading: false,
+                        users: myUserList
+                    })
                 })
-            })
+        })
     }
 
     onRefresh() {
-        fetchUsers()
-            .then((myUserList) => {
-                this.setState({
-                    users: myUserList
+        this.setState({ loading: true }, () => {
+            fetchUsers()
+                .then((myUserList) => {
+                    this.setState({
+                        loading: false,
+                        users: myUserList
+                    })
                 })
-            })
+        })
     }
     onChangeLayout() {
         this.setState((prevState) => { return { isGrid: !prevState.isGrid } })
@@ -46,13 +54,14 @@ class UserPage extends React.Component {
     }
 
     render() {
+        const { users, isGrid, query, loading } = this.state
         let components = []
         let nameForClass = ""
         let iconName = ""
 
-        const searchUsers = this.state.users.filter(user => user.fullName().includes(this.state.query));
+        const searchUsers = users.filter(user => user.fullName().includes(query));
 
-        if (this.state.isGrid) {
+        if (isGrid) {
             iconName = "list"
             nameForClass = "row"
             if (searchUsers.length > 0) {
@@ -76,13 +85,11 @@ class UserPage extends React.Component {
 
         return (
             <div>
-                <Search query={this.state.query} inputText={this.inputText} />
+                <Search query={query} inputText={this.inputText} />
                 <Buttons iconName={iconName} onRefresh={this.onRefresh} onChangeLayout={this.onChangeLayout} />
                 <GenderCounter user={searchUsers} />
                 <div>
-                    <div class={nameForClass}>
-                        {components}
-                    </div>
+                    {loading ? <Loader /> : <div class={nameForClass}>{components}</div>}
                 </div>
             </div >
         )
