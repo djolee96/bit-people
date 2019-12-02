@@ -7,7 +7,6 @@ const Footer = (props) => {
                 <div class="container">  © {new Date().getFullYear()} Copyright Text</div>
             </div>
         </footer>
-
     )
 }
 
