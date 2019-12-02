@@ -1,7 +1,7 @@
 import React from "react"
 import ListView from "./ListView"
 import GridView from "./GridView"
-import { fetchUsers } from "../services/UserService"
+import { fetchUsers, fetchUsersUsingCache } from "../services/UserService"
 import Buttons from "./Buttons"
 import Search from "./Search"
 import NoResult from "./NoResult"
@@ -17,16 +17,17 @@ class UserPage extends React.Component {
 
         this.state = {
             users: [],
-            isGrid: false,
+            isGrid: !!JSON.parse(localStorage.getItem("grid-list")),
             query: "",
             loading: true,
         }
+
         this.onRefresh = this.onRefresh.bind(this)
         this.onChangeLayout = this.onChangeLayout.bind(this)
         this.inputText = this.inputText.bind(this)
     }
     componentDidMount() {
-        fetchUsers()
+        fetchUsersUsingCache()
             .then((myUserList) => {
                 this.setState({
                     loading: false,
@@ -37,7 +38,7 @@ class UserPage extends React.Component {
 
     onRefresh() {
         this.setState({ loading: true })
-        localStorage.setItem("previous", "false")
+
         fetchUsers()
             .then((myUserList) => {
                 this.setState({
@@ -49,8 +50,10 @@ class UserPage extends React.Component {
     }
 
     onChangeLayout() {
-        this.setState((prevState) => { return { isGrid: !prevState.isGrid } })
-        localStorage.setItem("grid-list", this.state.isGrid)
+        this.setState((prevState) => {
+            localStorage.setItem("grid-list", !prevState.isGrid);
+            return { isGrid: !prevState.isGrid }
+        })
     }
 
     inputText(event) {
@@ -58,44 +61,30 @@ class UserPage extends React.Component {
     }
 
     render() {
-        const { users, query, loading } = this.state
-        let components = []
-        let nameForClass = ""
-        let iconName = ""
+        const { users, query, loading, isGrid } = this.state
+
+        if (loading) {
+            return <Loader />;
+        }
 
         const searchUsers = users.filter(user => user.fullName().toUpperCase().includes(query.toUpperCase()));
 
-        if (JSON.parse(localStorage.getItem("grid-list"))) {
-            iconName = "list"
-            nameForClass = "row"
-            if (searchUsers.length > 0) {
-                components = searchUsers.map(user => <GridView user={user} />)
-            }
-            else {
-                components = (<NoResult />)
-            }
-        }
-        else {
-            iconName = "view_module"
+        const UsersLayoutComponent = isGrid
+            ? <GridView users={searchUsers} />
+            : <ListView users={searchUsers} />;
 
-            if (searchUsers.length > 0) {
-                nameForClass = "collection myItem"
-                components = searchUsers.map(user => <ListView user={user} />)
-            }
-            else {
-                components = (<NoResult />)
-            }
-        }
         return (
             <div>
-                <Buttons iconName={iconName} onRefresh={this.onRefresh} onChangeLayout={this.onChangeLayout} />
-                {loading ? <Loader /> : (
-                    <div>
-                        <Search query={query} inputText={this.inputText} />
-                        <GenderCounter user={searchUsers} />
-                        <div class={nameForClass}>{components}</div>
-                    </div>
-                )}
+                <Buttons isGrid={isGrid} onRefresh={this.onRefresh} onChangeLayout={this.onChangeLayout} />
+                <div>
+                    <Search query={query} inputText={this.inputText} />
+                    <GenderCounter user={searchUsers} />
+
+                    {!searchUsers.length
+                        ? <NoResult />
+                        : UsersLayoutComponent
+                    }
+                </div>
                 <p className="right">Last update: <TimeAgo date={localStorage.getItem("time")} /> </p>
             </div >
         )

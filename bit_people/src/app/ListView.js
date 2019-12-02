@@ -1,7 +1,7 @@
 import React from "react"
 
 
-const ListView = (props) => {
+const ListItem = (props) => {
     let clName = ''
     if (props.user.gender === "female") {
         clName = "red lighten-5"
@@ -20,5 +20,12 @@ const ListView = (props) => {
     )
 }
 
+const ListView = (props) => {
+    return (
+        <div className="collection myItem">
+            {props.users.map(user => <ListItem user={user} />)}
+        </div>
+    )
+}
 
 export default ListView

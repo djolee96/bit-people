@@ -1,19 +1,24 @@
 import User from "../entities/User"
 
-let fetchUsers = () => {
-    const url = "https://randomuser.me/api/?results=8"
-    const state = JSON.parse(localStorage.getItem("previous"))
+let fetchUsersUsingCache = () => {
+    const cachedApiUsers = JSON.parse(localStorage.getItem("users"))
 
-    return state ? (new Promise((resolve, reject) => resolve(JSON.parse(localStorage.getItem("users")).map(user => new User(user))))) :
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                localStorage.setItem("time", JSON.stringify(new Date()))
-                let myUserList = data.results.map(user => new User(user));
-                localStorage.setItem("users", JSON.stringify(data.results))
-                localStorage.setItem("previous", "true")
-                return myUserList
-            })
+    if (cachedApiUsers && cachedApiUsers.length) {
+        return new Promise((resolve) => resolve(cachedApiUsers.map(user => new User(user))));
+    }
+
+    return fetchUsers();
 }
 
-export { fetchUsers } 
+let fetchUsers = () => {
+    return fetch("https://randomuser.me/api/?results=8")
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem("time", JSON.stringify(new Date()))
+            localStorage.setItem("users", JSON.stringify(data.results))
+
+            return data.results.map(user => new User(user));
+        })
+}
+
+export { fetchUsers, fetchUsersUsingCache } 
